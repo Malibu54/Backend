@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "title": "Producto Modificado",
+    "description": "Descripción modificada",
+    "price": 39.99,
+    "thumbnail": "imagen_modificada.jpg",
+    "code": "P003",
+    "stock": 20
+  }
+]
