@@ -1,3 +1,4 @@
+// @ts-nocheck
 class ProductManager {
     constructor() {
         this.products = [];
