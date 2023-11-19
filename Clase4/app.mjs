@@ -34,10 +34,10 @@ app.get('/productos', async (req, res) => {
         let limit = parseInt(req.query.limit);
 
         if (isNaN(limit)) {
-            limit = undefined; // Si no se proporciona el límite, devolver todos los productos
+            limit = null; 
         }
 
-        const productos = productManager.getproductos(limit);
+        const productos = productManager.getProducts(limit);
         res.json(productos);
     } catch (error) {
         console.error('Error al obtener los productos:', error);
