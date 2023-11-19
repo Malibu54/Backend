@@ -1,36 +1,50 @@
-import express from "express";
+import express from 'express';
+import ProductManager from '../Proyecto/src/ProductManager'; 
 
 const app = express();
+const filePath = 'productos.json'; 
+const productManager = new ProductManager(filePath);
 
-app.get("/saludo", (req, res) => {
-  res.send("Hola a todos desde express");
+// Middleware para manejo de errores
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something went wrong!');
 });
 
-app.get("/bienvenida", (req, res) => {
-  const htmlResponse = `<html>
-    <head>
-        <style>
-            body {
-                color: blue;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>Bienvenido a mi aplicación</h1>
-    </body>
-</html>
-`;
-  res.send(htmlResponse);
+// Ruta para /productos/:pid
+app.get('/productos/:pid', async (req, res) => {
+    try {
+        const productId = parseInt(req.params.pid, 10);
+        const productoEncontrado = productManager.getProductById(productId);
+
+        if (productoEncontrado) {
+            res.json(productoEncontrado);
+        } else {
+            res.status(404).json({ error: 'Producto no encontrado' });
+        }
+    } catch (error) {
+        console.error('Error al obtener el producto:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
 });
 
-app.get("/usuario", (req, res) => {
-  const usuarioFalso = {
-    nombre: "John",
-    apellido: "Doe",
-    edad: 25,
-    correo: "john.doe@example.com",
-  };
-  res.json(usuarioFalso);
+// Ruta para /productos (con posibilidad de pasar un limit)
+app.get('/productos', async (req, res) => {
+    try {
+        let limit = parseInt(req.query.limit);
+
+        if (isNaN(limit)) {
+            limit = undefined; // Si no se proporciona el límite, devolver todos los productos
+        }
+
+        const productos = productManager.getproductos(limit);
+        res.json(productos);
+    } catch (error) {
+        console.error('Error al obtener los productos:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
 });
 
-app.listen(8080, () => console.log("Servidor arriba en el puerto 8080!"));
+app.listen(8080, () => {
+    console.log('Servidor arriba en el puerto 8080');
+});

@@ -1,18 +1,21 @@
 import express from 'express';
-import fs from 'fs/promises';
+import ProductManager from './ProductManager'; 
 
 const app = express();
+const filePath = 'productos.json'; 
+const productManager = new ProductManager(filePath);
 
+// Middleware para manejo de errores
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something went wrong!');
+});
 
-// Ruta para /products/:pid
-app.get('/products/:pid', async (req, res) => {
+// Ruta para /productos/:pid
+app.get('/productos/:pid', async (req, res) => {
     try {
-        // Leemos el archivo con los productos
-        const data = await fs.readFile('productos.json', 'utf8');
-        const productos = JSON.parse(data);
-
         const productId = parseInt(req.params.pid, 10);
-        const productoEncontrado = productos.find(producto => producto.id === productId);
+        const productoEncontrado = productManager.getProductById(productId);
 
         if (productoEncontrado) {
             res.json(productoEncontrado);
@@ -20,7 +23,24 @@ app.get('/products/:pid', async (req, res) => {
             res.status(404).json({ error: 'Producto no encontrado' });
         }
     } catch (error) {
-        console.error('Error al leer el archivo:', error);
+        console.error('Error al obtener el producto:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+
+// Ruta para /productos 
+app.get('/productos', async (req, res) => {
+    try {
+        let limit = parseInt(req.query.limit);
+
+        if (isNaN(limit)) {
+            limit = undefined; // Si no se proporciona el límite, devolver todos los productos
+        }
+
+        const productos = productManager.getproductos(limit);
+        res.json(productos);
+    } catch (error) {
+        console.error('Error al obtener los productos:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 });
