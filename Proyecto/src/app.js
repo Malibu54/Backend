@@ -31,13 +31,9 @@ app.get('/productos/:pid', async (req, res) => {
 // Ruta para /productos 
 app.get('/productos', async (req, res) => {
     try {
-        let limit = parseInt(req.query.limit);
+        const limit = req.query.limit !== undefined ? parseInt(req.query.limit, 10) : undefined;
 
-        if (isNaN(limit)) {
-            limit = undefined; // Si no se proporciona el límite, devolver todos los productos
-        }
-
-        const productos = productManager.getproductos(limit);
+        const productos = productManager.getProducts(limit);
         res.json(productos);
     } catch (error) {
         console.error('Error al obtener los productos:', error);
