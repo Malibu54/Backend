@@ -24,4 +24,27 @@ app.get('/productos/:pid', async (req, res) => {
         }
     } catch (error) {
         console.error('Error al obtener el producto:', error);
-        res.status(500).json({ error: 'Error interno
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+
+// Ruta para /productos (con posibilidad de pasar un limit)
+app.get('/productos', async (req, res) => {
+    try {
+        let limit = parseInt(req.query.limit);
+
+        if (isNaN(limit)) {
+            limit = null; 
+        }
+
+        const productos = productManager.getProducts(limit);
+        res.json(productos);
+    } catch (error) {
+        console.error('Error al obtener los productos:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+
+app.listen(8080, () => {
+    console.log('Servidor arriba en el puerto 8080');
+});
