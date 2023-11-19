@@ -2,7 +2,7 @@ import express from "express";
 import ProductManager from "./ProductManager";
 
 const app = express();
-const filePath = "productos.json";
+const filePath = "ProductManager.js";
 const productManager = new ProductManager(filePath);
 
 // Middleware para manejo de errores
