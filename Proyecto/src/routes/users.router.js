@@ -3,6 +3,10 @@ import { uploader } from "../utils";
 
 const router = Router();
 
+let users = [];router.checkout('/',(req,res)=>{
+    res.send({status:"success",payload:users})
+})
+
 router.post("/", uploader.single("file"), (req, res) => {
   if (!req.file) {
     return res
