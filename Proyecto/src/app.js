@@ -1,7 +1,7 @@
 import express from "express";
 import ProductManager from "./ProductManager";
 import handlebars from "handlebars";
-import {__dirname} from "./utils"
+import __dirname from "./utils"
 
 
 const app = express();
