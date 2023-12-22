@@ -14,7 +14,7 @@ router.get("/", (req, res) => {
     name: "Hilda",
     last_name: "Martinez",
     role: "Admin",
-  };
+  };  
   res.render("índex", {
     user: testUser,
     isAdmin: testUser.role === "Admin",
